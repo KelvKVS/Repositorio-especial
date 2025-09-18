@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Amor - Pedido de Namoro</title>
+    <meta name="description" content="Um pedido especial de namoro com memórias e promessas de futuro">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <!-- Tela Inicial -->
+        <div class="screen initial-screen" id="initialScreen">
+            <h1>Quer namorar comigo?</h1>
+            <p>Essa pergunta está no meu coração há um tempo... </p>
+            <div class="buttons">
+                <button class="btn-yes" onclick="showMainScreen()">SIM!</button>
+                <button class="btn-no" onclick="moveButton(this)">Não...</button>
+            </div>
+        </div>
+
+        <!-- Tela Principal -->
+        <div class="screen main-screen" id="mainScreen">
+            <h1> Agora somos oficialmente namorados! </h1> 
+            <h1> Eu te amo!!!❤️ </h1>
+            
+            <div class="carousel-container">
+                <button class="carousel-btn prev" onclick="prevSlide()">&#10094;</button>
+                <div class="carousel" id="carousel">
+                    <!-- Adicione suas fotos aqui -->
+                    <img src="images/foto1.jpeg" alt="foto 1">
+                    <img src="images/foto2.jpeg" alt="foto 2">
+                    <img src="images/foto3.jpeg" alt="foto 3">
+                    <img src="images/foto4.jpeg" alt="foto 4">
+                    <img src="images/foto5.jpeg" alt="foto 5">
+                    <img src="images/foto6.jpeg" alt="foto 6">
+                    <img src="images/foto7.jpeg" alt="foto 7">
+                </div>
+                <button class="carousel-btn next" onclick="nextSlide()">&#10095;</button>
+                <div class="carousel-nav" id="carouselNav"></div>
+            </div>
+
+            <div class="message">
+                "Começamos como dois nerds, viramos amigos, depois melhores amigos... e então decidimos tentar algo a mais. Na primeira vez não deu certo, na segunda também não, mas agora, na terceira, encontramos o melhor de nós dois. Agora é só crescer juntos, eu e você apenas nos dois. Cada momento que eu tive ao seu lado foi especial pra mim, e mal posso esperar para criar mais memórias incríveis ao seu lado. Te amo muito, meu amor! ❤️"
+            </div>
+
+            <div class="reasons-section">
+                <h2>10 razões pelas quais eu te amo</h2>
+                <ul class="reasons-list">
+                    <li>Seu sorriso é perfeitamente lindo e bem limpinho</li>
+                    <li>Suas bochechas gordinhas com cheirinho agredoce</li>
+                    <li>Sua forma de me tratar</li>
+                    <li>Seu jeito de rir comigo de qualquer besteira</li>
+                    <li>Sua capacidade de me surpreender mesmo nas minhas ultra analises</li>
+                    <li>Seu olhar que me faz focar em você que eu mal consigo com outros</li>
+                    <li>Sua escolha por min e apenas por min agora</li>
+                    <li>Sua coragem por me falar as coisas ate que sejam dolorosas</li>
+                    <li>A forma como você me entende sem palavras</li>
+                    <li>E simplesmente porque você é você</li>
+                </ul>
+            </div>
+
+            <div class="timer">
+                <h3>Eu te amo há </h3>
+                <div class="timer-display" id="timerDisplay"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração das partículas (corações)
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 50,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: ["#ff6b6b", "#d63384", "#ffb3b3"]
+                },
+                shape: {
+                    type: "char",
+                    character: {
+                        value: "💖",
+                        font: "Arial",
+                        style: "",
+                        weight: "400"
+                    }
+                },
+                opacity: {
+                    value: 0.7,
+                    random: true
+                },
+                size: {
+                    value: 15,
+                    random: true
+                },
+                line_linked: {
+                    enable: false
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "top",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "bubble"
+                    }
+                },
+                modes: {
+                    bubble: {
+                        distance: 100,
+                        size: 20,
+                        duration: 2,
+                        opacity: 0.8
+                    }
+                }
+            },
+            retina_detect: true
+        });
+
+        // Função para mover o botão "Não"
+        function moveButton(button) {
+            const maxX = window.innerWidth - button.offsetWidth - 50;
+            const maxY = window.innerHeight - button.offsetHeight - 50;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            button.style.position = 'fixed';
+            button.style.left = randomX + 'px';
+            button.style.top = randomY + 'px';
+            button.style.zIndex = '1000';
+            
+            // Faz o botão ficar menor a cada clique
+            const currentSize = parseFloat(getComputedStyle(button).fontSize);
+            if (currentSize > 8) {
+                button.style.fontSize = (currentSize * 0.8) + 'px';
+            }
+        }
+
+        // Mostrar tela principal
+        function showMainScreen() {
+            document.getElementById('initialScreen').classList.add('hidden');
+            document.getElementById('mainScreen').style.display = 'block';
+            initCarousel();
+            startTimer();
+        }
+
+        // Carrossel de fotos
+        let currentSlide = 0;
+        const images = document.querySelectorAll('#carousel img');
+
+        function initCarousel() {
+            const nav = document.getElementById('carouselNav');
+            images.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot';
+                if (index === 0) dot.classList.add('active');
+                dot.onclick = () => goToSlide(index);
+                nav.appendChild(dot);
+            });
+
+            // Auto-advance carousel
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % images.length;
+                updateCarousel();
+            }, 4000);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const carousel = document.getElementById('carousel');
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Funções de navegação do carrossel
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % images.length;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + images.length) % images.length;
+            updateCarousel();
+        }
+
+        // Timer de amor
+        function startTimer() {
+            const startDate = new Date('2025-06-20T19:00:00');
+            
+            function updateTimer() {
+                const now = new Date();
+                
+                // Calcular meses e dias de forma mais precisa
+                let years = now.getFullYear() - startDate.getFullYear();
+                let months = now.getMonth() - startDate.getMonth();
+                let days = now.getDate() - startDate.getDate();
+                
+                // Ajustar se os dias forem negativos
+                if (days < 0) {
+                    months--;
+                    const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                    days += lastMonth.getDate();
+                }
+                
+                // Ajustar se os meses forem negativos
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                
+                // Converter anos em meses
+                const totalMonths = years * 12 + months;
+                
+                // Calcular horas, minutos e segundos do dia atual
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+                
+                document.getElementById('timerDisplay').innerHTML = `
+                    <div class="timer-unit">
+                        <span class="number">${totalMonths}</span>
+                        <span class="label">Meses</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="number">${days}</span>
+                        <span class="label">Dias</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="number">${hours}</span>
+                        <span class="label">Horas</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="number">${minutes}</span>
+                        <span class="label">Minutos</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="number">${seconds}</span>
+                        <span class="label">Segundos</span>
+                    </div>
+                `;
+            }
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+    </script>
+</body>
+</html>
